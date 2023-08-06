@@ -1,34 +1,43 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import baseUrl from '../BaseUrl.json'
+import { useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import axios from 'axios'; // Import axios
+
 const Signup = () => {
-  const [name,setName] = useState('');
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('/api/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
+      const response = await axios.post(`${baseUrl.url}/signup`, {
+        "email" : email,
+        "name" : name,
+        "password" : password,
       });
 
-      if (response.ok) {
-        const data = await response.json();
+      if (response.status === 200) {
+        const data = response.data;
         console.log('Signed up successfully:', data);
+        toast.success('Signed up successfully!'); // Show success toast
+        navigate('/login');
       } else {
         throw new Error('Signup failed');
       }
     } catch (error) {
       // Handle signup error
       console.error('Signup error:', error.message);
+      toast.error('Signup failed! Please try again.'); // Show error toast
     }
   };
 
   return (
+    <>
     <div className="bg-[#004e96] min-h-screen flex items-center justify-center">
       <div className="bg-white p-8 rounded-xl shadow-md w-96">
         <h2 className="text-2xl font-semibold mb-6 text-center">Create an account</h2>
@@ -84,6 +93,8 @@ const Signup = () => {
         </p>
       </div>
     </div>
+    <ToastContainer />
+    </>
   );
 };
 

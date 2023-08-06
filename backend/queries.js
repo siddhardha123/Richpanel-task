@@ -7,9 +7,17 @@ const getPlans = async () => {
 };
 
 const signUp = async (email,name, password) => {
-  const query = 'INSERT INTO UserAccounts (email,name,password) VALUES ($1, $2, $3) RETURNING *';
-  const values = [email,name, password];
-  const { rows } = await pool.query(query, values);
+  const checkQuery = 'SELECT * FROM UserAccounts WHERE email = $1';
+  const checkValues = [email];
+  const checkResult = await pool.query(checkQuery, checkValues);
+
+  if (checkResult.rows.length > 0) {
+    throw new Error('Email already exists');
+  }
+
+  const insertQuery = 'INSERT INTO UserAccounts (name, email, password) VALUES ($1, $2, $3) RETURNING *';
+  const insertValues = [name, email, password];
+  const { rows } = await pool.query(insertQuery, insertValues);
   return rows[0];
 };
 

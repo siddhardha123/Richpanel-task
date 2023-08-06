@@ -5,9 +5,9 @@ import queries from '../queries.js';
 const { signUp } = queries;
 
 router.post('/', async (req, res) => {
-  const { email, password } = req.body;
+  const { email , name, password } = req.body;
   try {
-    const newUser = await signUp(email, password);
+    const newUser = await signUp(email, name,password);
     res.json(newUser);
   } catch (err) {
     res.status(500).json({ error: 'Internal server error' });

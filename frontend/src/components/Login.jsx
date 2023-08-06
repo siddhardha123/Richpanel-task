@@ -1,36 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState,useContext } from 'react';
 import { Link } from 'react-router-dom';
-
+import axios from 'axios';
+import { AppContext } from '../AppContext';
+import baseUrl from '../BaseUrl.json'
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
+  const { data, setData } = useContext(AppContext);
+  const navigate = useNavigate();
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
+      const response = await axios.post(`${baseUrl.url}/login`, {
+        email,
+        password,
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log('Logged in successfully:', data);
-        // Redirect to dashboard or home page upon successful login
-        // You can use React Router's history or other navigation methods for this.
+      if (response.status === 200) {
+        console.log('Logged in successfully');
+        toast.success('Login successful');
+        const { name } = response.data;
+        setData({ ...data, name : name });
+        toast.success(`Login successful. Welcome, ${name}!`);
+        navigate('/plans');
+
+      } else if (response.status === 401) {
+        throw new Error('Invalid credentials');
       } else {
         throw new Error('Login failed');
       }
     } catch (error) {
       // Handle login error
       console.error('Login error:', error.message);
+      toast.error('Login failed! Please check your credentials.');
     }
   };
 
   return (
+    <>
     <div className="bg-[#004e96] min-h-screen flex items-center justify-center">
       <div className="bg-white p-8 rounded-xl shadow-md w-96">
         <h2 className="text-2xl font-semibold mb-6 text-center">Login to your account</h2>
@@ -76,6 +86,8 @@ const Login = () => {
         </p>
       </div>
     </div>
+    <ToastContainer />
+    </>
   );
 };
 

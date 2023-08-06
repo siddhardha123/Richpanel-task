@@ -1,47 +1,8 @@
 import React, { useState ,useContext,useEffect} from 'react';
 import axios from 'axios'
+import baseUrl from '../BaseUrl.json'
 import { AppContext } from '../AppContext';
 import { useNavigate } from 'react-router-dom';
-// const plans = [
-//   {
-//     type: 'Basic',
-//     monthlyPrice: '100 INR',
-//     yearlyPrice: '1000 INR',
-//     videoQuality: 'Good',
-//     resolution: '480p',
-//     devices: 'Phone',
-//     activeScreens: 1,
-//   },
-//   {
-//     type: 'Standard',
-//     monthlyPrice: '200 INR',
-//     yearlyPrice: '2000 INR',
-//     videoQuality: 'Good',
-//     resolution: '720P',
-//     devices: 'Phone+Tablet',
-//     activeScreens: 1,
-//   },
-//   {
-//     type: 'Premium',
-//     monthlyPrice: '500 INR',
-//     yearlyPrice: '5000 INR',
-//     videoQuality: 'Better',
-//     resolution: '1080P',
-//     devices: 'Phone+Tablet+Computer',
-//     activeScreens: 2,
-//   },
-//   {
-//     type: 'Regular',
-//     monthlyPrice: '700 INR',
-//     yearlyPrice: '7000 INR',
-//     videoQuality: 'Best',
-//     resolution: '4K+HDR',
-//     devices: 'Phone+Tablet+TV',
-//     activeScreens: 4,
-//   },
-// ];
-
-// ... (previous code)
 
 const PricingTable = () => {
 
@@ -55,7 +16,7 @@ const PricingTable = () => {
   const [plans,setPlans] = useState([])
   const fetchPlans = async () => {
     try {
-      const response = await axios.get('http://localhost:3001/getPlans');
+      const response = await axios.get(`${baseUrl.url}/getPlans`);
       console.log(response.data.plans);
       setPlans(response.data.plans);
     } catch (error) {
