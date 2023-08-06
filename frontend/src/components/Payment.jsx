@@ -1,14 +1,11 @@
-import React, { useState } from 'react';
-const PaymentPage = () => {
-
-
+import React, { useState,useContext } from 'react';
+import { AppContext } from '../AppContext';
+const PaymentPage = () => { 
   const [cardInfo, setCardInfo] = useState({ cardNumber: '', expiryDate: '', cvv: '' });
-  const [user] = useState({
-    name: 'John Doe',
-    plan: 'Premium Plan',
-    price: '$19.99',
-  });
 
+  const { data } = useContext(AppContext);
+
+  
   const handlePayment = (e) => {
     e.preventDefault();
     // Implement your payment logic here
@@ -65,15 +62,15 @@ const PaymentPage = () => {
     <tbody>
       <tr className="border-b border-gray-400 ">
         <td className="font-semibold w-1/2 p-2">Full Name:</td>
-        <td className="w-1/2 text-right p-2">{user.name}</td>
+        <td className="w-1/2 text-right p-2">{data.name}</td>
       </tr>
       <tr className="border-b border-gray-400 ">
         <td className="font-semibold w-1/2 p-2">Billing Cycle:</td>
-        <td className="w-1/2 text-right p-2">{user.plan}</td>
+        <td className="w-1/2 text-right p-2">{data.cycle}</td>
       </tr>
       <tr className="border-b border-gray-400">
         <td className="font-semibold w-1/2 p-2">Price:</td>
-        <td className="w-1/2 text-right p-2  ">{user.price}</td>
+        <td className="w-1/2 text-right p-2  ">{data.price}</td>
       </tr>
     </tbody>
   </table>
